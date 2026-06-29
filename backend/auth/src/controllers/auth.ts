@@ -6,7 +6,7 @@ import { oauth2client } from "../config/googleConfig.js";
 import axios from "axios";
 
 export const loginUser = TryCatch(async (req, res) => {
-  const { code } = req.body; //we get this from frontend
+  const { code } = req.body; //Authoritative code from frontend
 
   if (!code) {
     return res.status(400).json({
