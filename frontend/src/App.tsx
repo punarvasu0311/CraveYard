@@ -4,12 +4,14 @@ import Login from "./pages/Login";
 import PublicRoute from "./components/publicRoute";
 import ProtectedRoute from "./components/protectedRoute";
 import SelectRole from "./pages/SelectRole";
+import Navbar from "./components/navbar";
 
 
 const App = () => {
   return (
     <>
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />
