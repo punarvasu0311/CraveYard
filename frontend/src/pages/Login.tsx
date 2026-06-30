@@ -5,11 +5,12 @@ import { authService } from "../main";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from '@react-oauth/google';
 import { FcGoogle } from "react-icons/fc";
+import { useAppData } from "../context/AppContext";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
+  const { setIsAuth, setUser } = useAppData();
 
   const responseGoogle = async (authResult: any) => {
     setLoading(true);
@@ -18,7 +19,9 @@ const Login = () => {
         code: authResult["code"],
       });
       
-      localStorage.setItem("token", result.data.token); //we store in local storage as react is stateless
+      localStorage.setItem("token", result.data.token);
+      setIsAuth(true);
+      setUser(result.data.user);
       toast.success(result.data.message);
       setLoading(false);
     } catch (error) {
