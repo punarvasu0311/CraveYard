@@ -9,7 +9,7 @@ import {
 
 import { authService} from "../main";
 import { Toaster } from "react-hot-toast";
-import type { AppContextType, User } from "../types";
+import type { AppContextType, LocationData, User } from "../types";
 
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -23,7 +23,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<LocationData | null>(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [city, setCity] = useState("Fecthing Location...");
 
@@ -50,6 +50,47 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     fetchUser();
   }, []);
 
+    useEffect(() => {
+    // 1. Check if the browser supports location
+    if (!navigator.geolocation)
+      return alert("Please Allow Location to continue");
+    setLoadingLocation(true);
+    // 2. Ask the browser for coordinates
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+
+      try {
+         // 3. Convert coordinates to a real-world address using a free API (Reverse Geocoding)
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        const data = await res.json();
+        // 4. Save the full address
+        setLocation({
+          latitude,
+          longitude,
+          formattedAddress: data.display_name || "current location",
+        });
+        // 5. Extract just the city/town name to display in the Navbar
+        setCity(
+          data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            "Your Location"
+        );
+        setLoadingLocation(false);
+      } catch (error) {
+        setLocation({
+          latitude,
+          longitude,
+          formattedAddress: "Current Location",
+        });
+        setCity("Faild to load");
+        setLoadingLocation(false);
+      }
+    });
+  }, []);
+
   return (
     <AppContext.Provider
       value={{
@@ -58,7 +99,10 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         setIsAuth,
         setLoading,
         setUser,
-        user
+        user,
+        location,
+        loadingLocation,
+        city
       }}
     >
       {children}
