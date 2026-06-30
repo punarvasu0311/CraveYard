@@ -20,7 +20,7 @@ const Login = () => {
       });
       
       localStorage.setItem("token", result.data.token);
-      setIsAuth(true);
+      setIsAuth(true);//so the react rerenders automatically
       setUser(result.data.user);
       toast.success(result.data.message);
       setLoading(false);
