@@ -4,7 +4,7 @@ import { useAppData } from "../context/AppContext";
 const ProtectedRoute = () => {
   const { isAuth, user, loading } = useAppData();
 
-  const location = useLocation();
+  const location = useLocation(); //gives current url
 
   if (loading) return null;
 
