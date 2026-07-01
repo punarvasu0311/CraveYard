@@ -6,9 +6,20 @@ import ProtectedRoute from "./components/protectedRoute";
 import SelectRole from "./pages/SelectRole";
 import Navbar from "./components/navbar";
 import Account from "./pages/Account";
+import { useAppData } from "./context/AppContext";
+import Restaurant from "./pages/Restaurant";
 
 
 const App = () => {
+  const { user, loading } = useAppData();
+
+  if (loading) {
+    return (
+      <h1 className="text-2xl font-bold text-red-500 text-center mt-56">
+        Loading...
+      </h1>
+    );
+  }
   return (
     <>
       <BrowserRouter>
