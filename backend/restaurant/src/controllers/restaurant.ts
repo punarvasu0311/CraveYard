@@ -105,7 +105,7 @@ export const fetchMyRestaurant = TryCatch(
         }
       );
 
-      return res.json({ restaurant, token }); // token is sent so that it will be stored in local storage
+      return res.json({ restaurant, token }); // token is sent only when it is newly generated
     }
 
     res.json({ restaurant });

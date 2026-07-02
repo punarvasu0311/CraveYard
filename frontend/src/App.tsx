@@ -20,6 +20,9 @@ const App = () => {
       </h1>
     );
   }
+  if (user && user.role === "seller") {
+    return <Restaurant />;
+  }
   return (
     <>
       <BrowserRouter>

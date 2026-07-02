@@ -58,7 +58,7 @@ export const isAuth = async (
     });
   }
 };
-
+//Authorization
 export const isSeller = async (
   req: AuthenticatedRequest,
   res: Response,
