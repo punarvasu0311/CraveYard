@@ -91,6 +91,22 @@ export const fetchMyRestaurant = TryCatch(
       });
     }
     //used for real time orders when connected to socket.io
+    if (!req.user.restaurantId) {
+      const token = jwt.sign(
+        {
+          user: {
+            ...req.user,
+            restaurantId: restaurant._id,
+          },
+        },
+        process.env.JWT_SEC as string,
+        {
+          expiresIn: "15d",
+        }
+      );
+
+      return res.json({ restaurant, token });
+    }
 
     res.json({ restaurant });
   }
