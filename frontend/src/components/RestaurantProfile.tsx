@@ -8,11 +8,11 @@ import { useAppData } from "../context/AppContext";
 
 interface props {
   restaurant: IRestaurant;
-  isSeller: boolean; //is used so that only seller can edit,and same RestaurantProfile is displayed to customers also
+  isSeller: boolean;//is used so that only seller can edit,and same RestaurantProfile is displayed to customers also
   onUpdate: (restaurant: IRestaurant) => void;
 }
 //passing arguments to functions (analogy to cpp)
-const RestaurantProfile = ({ restaurant,isSeller, onUpdate }: props) => {//if there is no context then this should be always followed
+const RestaurantProfile = ({ restaurant, isSeller, onUpdate }: props) => {//if there is no context then this should be always followed
   const [editMode, setEditMode] = useState(false);
   const [name, setName] = useState(restaurant.name);
   const [description, setDescription] = useState(restaurant.description);
@@ -38,6 +38,7 @@ const RestaurantProfile = ({ restaurant,isSeller, onUpdate }: props) => {//if th
       toast.error(error.response.data.message);
     }
   };
+
   const saveChanges = async () => {
     try {
       setLoading(true);
@@ -61,7 +62,9 @@ const RestaurantProfile = ({ restaurant,isSeller, onUpdate }: props) => {//if th
       setLoading(false);
     }
   };
+
   const { setIsAuth, setUser } = useAppData();
+
   const logoutHandler = async () => {
     await axios.put(
       `${restaurantService}/api/restaurant/status`,
@@ -180,6 +183,6 @@ const RestaurantProfile = ({ restaurant,isSeller, onUpdate }: props) => {//if th
       </div>
     </div>
   );
-}
+};
 
-export default RestaurantProfile
+export default RestaurantProfile;
