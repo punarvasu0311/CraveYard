@@ -107,7 +107,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     >
       {children}
 
-      <Toaster />
+      <Toaster /> {/* It collects popus */}
     </AppContext.Provider>
   );
 };
