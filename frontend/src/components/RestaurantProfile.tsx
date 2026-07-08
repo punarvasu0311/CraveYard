@@ -1,3 +1,4 @@
+//for both seller and user
 import { useState } from "react";
 import type { IRestaurant } from "../types";
 import axios from "axios";

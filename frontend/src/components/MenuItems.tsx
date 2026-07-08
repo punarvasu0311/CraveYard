@@ -1,3 +1,4 @@
+//for both seller and user
 import { useState } from "react";
 import type { IMenuItem } from "../types";
 import { FiEyeOff } from "react-icons/fi";
@@ -41,7 +42,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
     try {
       const { data } = await axios.put(
         `${restaurantService}/api/item/status/${itemId}`,
-        {},
+        {}, //put has a different type of calling technique like,we need to keep req body empty
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
