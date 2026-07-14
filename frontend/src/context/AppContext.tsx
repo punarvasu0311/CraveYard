@@ -6,10 +6,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
-import { authService} from "../main";
+import { authService, restaurantService } from "../main";
+import type { AppContextType, ICart, LocationData, User } from "../types";
 import { Toaster } from "react-hot-toast";
-import type { AppContextType, LocationData, User } from "../types";
 
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -46,9 +45,36 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     }
   }
 
+  const [cart, setCart] = useState<ICart[]>([]);
+  const [subTotal, setSubTotal] = useState(0);
+  const [quauntity, setQuauntity] = useState(0);
+
+  async function fetchCart() {
+    if (!user || user.role !== "customer") return;
+    try {
+      const { data } = await axios.get(`${restaurantService}/api/cart/all`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setCart(data.cart || []);
+      setSubTotal(data.subtotal || 0);
+      setQuauntity(data.cartLength);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    if (user && user.role === "customer") {
+      fetchCart();
+    }
+  }, [user]);
 
     useEffect(() => {
     // 1. Check if the browser supports location
@@ -101,7 +127,11 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         user,
         location,
         loadingLocation,
-        city
+        city,
+        cart,
+        fetchCart,
+        quauntity,
+        subTotal,
       }}
     >
       {children}

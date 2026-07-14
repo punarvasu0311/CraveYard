@@ -9,6 +9,7 @@ import Account from "./pages/Account";
 import { useAppData } from "./context/AppContext";
 import Restaurant from "./pages/Restaurant";
 import RestaurantPage from "./pages/RestaurantPage";
+import Cart from "./pages/Cart";
 
 
 const App = () => {
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/select-role" element={<SelectRole />} />
             <Route path="/account" element={<Account />} />
             <Route path="/restaurant/:id" element={<RestaurantPage />} />
+            <Route path="/cart" element={<Cart />} />
           </Route>
         </Routes>
       </BrowserRouter>
