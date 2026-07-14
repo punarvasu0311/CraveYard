@@ -60,22 +60,21 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       const { latitude, longitude } = position.coords;
 
       try {
-         // 3. Convert coordinates to a real-world address using a free API (Reverse Geocoding)
+         // 3. Convert coordinates to a real-world address using a free API (client-side reverse geocoding API)
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+           `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
         );
         const data = await res.json();
         // 4. Save the full address
         setLocation({
           latitude,
           longitude,
-          formattedAddress: data.display_name || "current location",
+           formattedAddress: data.city ? `${data.city}, ${data.principalSubdivision}` : "Current Location",
         });
         // 5. Extract just the city/town name to display in the Navbar
         setCity(
-          data.address.city ||
-            data.address.town ||
-            data.address.village ||
+          data.city ||
+            data.locality ||
             "Your Location"
         );
         setLoadingLocation(false);
