@@ -28,7 +28,7 @@ const AddRestaurant = ({ fetchMyRestaurant }: props) => {
 
     formData.append("name", name);
     formData.append("description", description);
-    formData.append("ltitudae", String(location.latitude));
+    formData.append("latitude", String(location.latitude));
     formData.append("longitude", String(location.longitude));
     formData.append("formattedAddress", location.formattedAddress);
     formData.append("file", image);
