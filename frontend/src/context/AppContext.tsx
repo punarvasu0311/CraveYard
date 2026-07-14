@@ -60,7 +60,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       const { latitude, longitude } = position.coords;
 
       try {
-         // 3. Convert coordinates to a real-world address using a free API (client-side reverse geocoding API)
+         // 3. Convert coordinates to a real-world address using a free API (client-side reverse geocoding API,with bigdatacloud)
         const res = await fetch(
            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
         );
