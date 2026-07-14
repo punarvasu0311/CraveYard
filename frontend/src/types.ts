@@ -59,8 +59,8 @@ export interface IMenuItem{
 export interface ICart {
   _id: string;
   userId: string;
-  restaurantId: string | IRestaurant;
-  itemId: string | IMenuItem;
+  restaurantId: string | IRestaurant; //because of populate in backend
+  itemId: string | IMenuItem; //because of populate in backend
   quauntity: number;
   cretedAt: Date;
   updatedAt: Date;
