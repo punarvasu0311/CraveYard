@@ -49,3 +49,36 @@ export const addToCart = TryCatch(async (req: AuthenticatedRequest, res) => {
     cart: cartItem,
   });
 });
+
+export const fetchMyCart = TryCatch(async (req: AuthenticatedRequest, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      message: "Please Login",
+    });
+  }
+
+  const userId = req.user._id;
+  //the significance of using reference in cartItem in model is that we can use populate
+  //  it replaces the raw ObjectId strings with the full document objects
+  const cartItems = await Cart.find({ userId })
+    .populate("itemId")
+    .populate("restaurantId");
+
+  let subtotal = 0;
+  let cartLength = 0;
+
+  for (const cartItem of cartItems) {
+    const item: any = cartItem.itemId;
+
+    subtotal += item.price * cartItem.quauntity;
+    cartLength += cartItem.quauntity;
+  }
+
+  return res.json({
+    success: true,
+    cartLength,
+    subtotal,
+    cart: cartItems,
+  });
+});
+

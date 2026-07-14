@@ -120,6 +120,24 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
                     </button>
                   </div>
                 )}
+
+                {!isSeller && (
+                  <button
+                    disabled={!item.isAvailable || isLoading}
+                    onClick={()=>{}}
+                    className={`flex items-center justify-center rounded-lg p-2 ${
+                      !item.isAvailable || isLoading
+                        ? "cursor-not-allowed text-gray-400"
+                        : "text-red-500 hover:bg-red-50"
+                    }`}
+                  >
+                    {isLoading ? (
+                      <VscLoading size={18} className="animate-spin" />
+                    ) : (
+                      <BsCartPlus size={18} />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>
