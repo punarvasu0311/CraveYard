@@ -75,7 +75,7 @@ const AddMenuItem = ({ onItemAdded }: { onItemAdded: () => void }) => {
 
       <label className="flex cursor-pointer items-center gap-3 rounded-lg border p-4 text-sm text-gray-600 hover:bg-gray-50">
         <BiUpload className="h-5 w-5 text-red-500" />
-        {image ? image.name : "Upload restaurant image"}
+        {image ? image.name : "Upload item image"}
         <input
           type="file"
           accept="image/*"
