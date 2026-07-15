@@ -87,10 +87,12 @@ const AddAddressPage = () => {
   const fetchFormattedAddress = async (lat: number, lng: number) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`
       );
       const data = await res.json();
-      setFormattedAddress(data.display_name || "");
+      setFormattedAddress(
+        data.city ? `${data.city}, ${data.principalSubdivision}` : data.locality || "Selected Location"
+      );
     } catch {
       toast.error("Failed to fetch address");
     }
