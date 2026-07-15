@@ -44,6 +44,7 @@ const schema = new Schema<IRestaurant>(
 
     autoLocation: {
       type: {
+        // GeoJSON fromat
         type: String,
         enum: ["Point"],
         required: true,
