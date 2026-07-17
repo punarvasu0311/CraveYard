@@ -151,7 +151,7 @@ export const createOrder = TryCatch(async (req: AuthenticatedRequest, res) => {
     expiresAt,
   });
 
-  await Cart.deleteMany({ userId: user._id });
+  await Cart.deleteMany({ userId: user._id }); //delete Cart items once order is placed
 
   res.json({
     message: "Order created successfully",
