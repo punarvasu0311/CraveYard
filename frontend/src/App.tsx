@@ -13,6 +13,7 @@ import Cart from "./pages/Cart";
 import AddAddressPage from "./pages/Address";
 import Checkout from "./pages/Checkout";
 import PaymentSuccess from "./pages/PaymentSucess";
+import OrderSuccess from "./pages/OrderSuccess";
 
 
 const App = () => {
@@ -48,6 +49,7 @@ const App = () => {
               path="/paymentsuccess/:paymentId"
               element={<PaymentSuccess />}
             />
+            <Route path="/ordersuccess" element={<OrderSuccess />} />
           </Route>
         </Routes>
       </BrowserRouter>

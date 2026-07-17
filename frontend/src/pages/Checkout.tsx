@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import type { ICart, IMenuItem, IRestaurant } from "../types";
 import toast from "react-hot-toast";
 import { BiCreditCard, BiLoader } from "react-icons/bi";
+import { loadStripe } from "@stripe/stripe-js";
 
 interface Address {
   _id: string;
@@ -14,7 +15,7 @@ interface Address {
 }
 
 const Checkout = () => {
-  const { cart, subTotal, quauntity, fetchCart } = useAppData();
+  const { cart, subTotal, quauntity } = useAppData();
 
   const [addresses, setAddresses] = useState<Address[]>([]);
 
@@ -133,7 +134,6 @@ const Checkout = () => {
             });
 
             toast.success("Payment successful 🎉");
-            fetchCart(); // Fetch the cleared cart from the backend 
             navigate("/paymentsuccess/" + response.razorpay_payment_id);
           } catch (error) {
             toast.error("Payment verification failed");
@@ -154,13 +154,34 @@ const Checkout = () => {
     }
   };
 
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
   const payWithStripe = async () => {
     try {
       setLoadingStripe(true);
       const order = await createOrder("stripe");
       if (!order) return;
 
-      console.log("stripe checkout",order);
+      const { orderId } = order;
+
+      try {
+        await stripePromise;
+
+        const { data } = await axios.post(
+          `${utilsService}/api/payment/stripe/create`,
+          {
+            orderId,
+          }
+        );
+
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          toast.error("failed to create payment session");
+        }
+      } catch (error) {
+        toast.error("Payment Failed");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Payment failed");
@@ -277,7 +298,7 @@ const Checkout = () => {
           onClick={payWithStripe}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-black py-3 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50"
         >
-          {loadingRazorpay ? (
+          {loadingStripe ? (
             <BiLoader size={18} className="animate-spin" />
           ) : (
             <BiCreditCard size={18} />
