@@ -12,6 +12,7 @@ import RestaurantPage from "./pages/RestaurantPage";
 import Cart from "./pages/Cart";
 import AddAddressPage from "./pages/Address";
 import Checkout from "./pages/Checkout";
+import PaymentSuccess from "./pages/PaymentSucess";
 
 
 const App = () => {
@@ -43,6 +44,10 @@ const App = () => {
             <Route path="/account" element={<Account />} />
             <Route path="/restaurant/:id" element={<RestaurantPage />} />
             <Route path="/cart" element={<Cart />} />
+            <Route
+              path="/paymentsuccess/:paymentId"
+              element={<PaymentSuccess />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
