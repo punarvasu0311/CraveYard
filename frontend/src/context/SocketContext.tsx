@@ -22,18 +22,18 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!isAuth) {
-      socketRef.current?.disconnect();
+      socketRef.current?.disconnect();// if user is not authenticated then disconnect him from the socket
       socketRef.current = null;
       return;
     }
 
-    if (socketRef.current) return;
+    if (socketRef.current) return;//if user already has socket then do nothing
 
-    const socket = io(realtimeService, {
+    const socket = io(realtimeService, {//initializes the connection
       auth: {
         token: localStorage.getItem("token"),
       },
-      transports: ["websocket"],
+      transports: ["websocket"],// (upgrade) to skip the HTTP long-polling step completely and immediately try to establish a direct WebSocket 
     });
 
     socketRef.current = socket;
@@ -49,7 +49,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     socket.on("connect_error", (err) => {
       console.log("Socket Error:", err.message);
     });
-
+    //cleanup function (prevents memory leaks)
     return () => {
       socket.disconnect();
       socketRef.current = null;
