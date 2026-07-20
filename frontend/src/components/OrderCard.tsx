@@ -30,7 +30,7 @@ const statusColor = (status: string) => {
 };
 
 const OrderCard = ({ order, onStatusUpdate }: props) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);//this is used to disable the buttons
   const [retryVisible, setRetryVisible] = useState(false);
 
   const actions = ORDER_ACTIONS[order.status] || [];
