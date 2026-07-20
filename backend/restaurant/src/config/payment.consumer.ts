@@ -59,7 +59,7 @@ export const startPaymentConsumer = async () => {
           },
         }
       );
-      
+      //this tells the rabbitmq that msg is successfully processed,so now rabbitmq can delete it
       channel.ack(msg);
     } catch (error) {
       console.error("❌ Payment cosumer error:", error);
