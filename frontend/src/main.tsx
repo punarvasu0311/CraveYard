@@ -10,6 +10,7 @@ import { SocketProvider } from './context/SocketContext.tsx';
 export const authService = "http://localhost:5001";
 export const restaurantService = "http://localhost:5002";
 export const utilsService = "http://localhost:5003";
+export const riderService = "http://localhost:5004";
 export const realtimeService = "http://localhost:5005";
 
 createRoot(document.getElementById('root')!).render(

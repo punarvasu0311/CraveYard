@@ -16,6 +16,7 @@ import PaymentSuccess from "./pages/PaymentSucess";
 import OrderSuccess from "./pages/OrderSuccess";
 import Orders from "./pages/Orders";
 import OrderPage from "./pages/OrderPage";
+import RiderDashboard from "./pages/RiderDashboard";
 
 
 const App = () => {
@@ -30,6 +31,9 @@ const App = () => {
   }
   if (user && user.role === "seller") {
     return <Restaurant />;
+  }
+  if (user && user.role === "rider") {
+    return <RiderDashboard />;
   }
   return (
     <>
