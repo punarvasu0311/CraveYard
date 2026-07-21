@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { IOrder } from "../types";
 import { useSocket } from "../context/SocketContext";
-import audio from "../assets/quack.wav";
+import audio from "../assets/restaurant.wav";
 import axios from "axios";
 import { restaurantService } from "../main";
 import OrderCard from "./OrderCard";
