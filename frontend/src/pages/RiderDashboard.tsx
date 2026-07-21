@@ -9,6 +9,7 @@ import type { IOrder } from "../types";
 import audio from "../assets/rider.wav"
 import RiderOrderRequest from "../components/RiderOrderRequest";
 import RiderCurrentOrder from "../components/RiderCurrentOrder";
+import RiderOrderMap from "../components/RiderOrderMap";
 
 interface IRider {
   _id: string;
@@ -370,9 +371,10 @@ const fetchCurrentOrder = async () => {
             order={currentOrder}
             onStatusUpdate={fetchCurrentOrder}
           />
+          <RiderOrderMap order={currentOrder} />
         </div>
       )}
-      
+
     </div>
   );
 }
