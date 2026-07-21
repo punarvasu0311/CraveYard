@@ -91,7 +91,7 @@ export const fetchMyRestaurant = TryCatch(
       });
     }
     //used for real time orders when connected to socket.io
-    if (!req.user.restaurantId) {
+    if (req.user.restaurantId !== restaurant._id.toString()) {
       const token = jwt.sign(
         {
           user: {
