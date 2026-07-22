@@ -1,4 +1,4 @@
-# 🍽️ CraveYard – Microservices Based Food Delivery System
+# 🪦🍔 CraveYard – Microservices Based Food Delivery System
 
 CraveYard is a full-stack microservices-based food ordering and delivery system. This project includes:
 
@@ -119,3 +119,9 @@ docker-compose down -v
 
 - **Port Conflicts**:  
   Ensure ports `5001-5006`, `5173`, `27017`, and `15672` are available on your host machine before running `docker-compose up`.
+
+---
+
+## 👨‍💻 Author
+
+Developed with ❤️ by Harshith.
