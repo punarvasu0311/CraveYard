@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+  mongodb:
+    image: mongo:latest
+    container_name: craveyard-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: craveyard-rabbitmq
@@ -17,7 +25,12 @@ services:
     ports:
       - "5001:5001"
     env_file:
-      - ./backend/auth/.env
+      - .env
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongodb:27017/CraveYard_DB
+    depends_on:
+      - mongodb
 
   restaurant:
     image: punarvasu1154/craveyard-restaurant:latest
@@ -25,22 +38,33 @@ services:
     ports:
       - "5002:5002"
     env_file:
-      - ./backend/restaurant/.env
+      - .env
     environment:
-      # Override the localhost RabbitMQ URL to point to the rabbitmq container
-      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+      - PORT=5002
+      - MONGO_URI=mongodb://mongodb:27017/CraveYard_DB
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+      - UTILS_SERVICE=http://utils:5003
+      - REALTIME_SERVICE=http://realtime:5005
+      - PAYMENT_QUEUE=payment_event
+      - RIDER_QUEUE=rider_queue
+      - ORDER_READY_QUEUE=order_ready_queue
     depends_on:
+      - mongodb
       - rabbitmq
 
   utils:
-    image: punarvasu1154/craveyard:latest
+    image: punarvasu1154/craveyard-utils:latest
     container_name: craveyard-utils
     ports:
       - "5003:5003"
     env_file:
-      - ./backend/utils/.env
+      - .env
     environment:
-      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+      - PORT=5003
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+      - RESTAURANT_SERVICE=http://restaurant:5002
+      - PAYMENT_QUEUE=payment_event
+      - FRONTEND_URL=http://localhost:5173
     depends_on:
       - rabbitmq
 
@@ -50,10 +74,18 @@ services:
     ports:
       - "5004:5004"
     env_file:
-      - ./backend/rider/.env
+      - .env
     environment:
-      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+      - PORT=5004
+      - MONGO_URI=mongodb://mongodb:27017/CraveYard_DB
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+      - UTILS_SERVICE=http://utils:5003
+      - REALTIME_SERVICE=http://realtime:5005
+      - RESTAURANT_SERVICE=http://restaurant:5002
+      - RIDER_QUEUE=rider_queue
+      - ORDER_READY_QUEUE=order_ready_queue
     depends_on:
+      - mongodb
       - rabbitmq
 
   realtime:
@@ -62,7 +94,9 @@ services:
     ports:
       - "5005:5005"
     env_file:
-      - ./backend/realtime/.env
+      - .env
+    environment:
+      - PORT=5005
 
   admin:
     image: punarvasu1154/craveyard-admin:latest
@@ -70,10 +104,19 @@ services:
     ports:
       - "5006:5006"
     env_file:
-      - ./backend/admin/.env
+      - .env
+    environment:
+      - PORT=5006
+      - MONGO_URI=mongodb://mongodb:27017/CraveYard_DB
+      - DB_NAME=CraveYard_DB
+    depends_on:
+      - mongodb
 
   frontend:
     image: punarvasu1154/craveyard-frontend:latest
     container_name: craveyard-frontend
     ports:
-      - "5173:80"  # Nginx runs on 80, mapped to your usual 5173
+      - "5173:80"
+
+volumes:
+  mongodb_data:
