@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { authService } from "../main";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from '@react-oauth/google';
@@ -9,7 +9,7 @@ import { useAppData } from "../context/AppContext";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
   const { setIsAuth, setUser } = useAppData();
 
   const responseGoogle = async (authResult: any) => {
