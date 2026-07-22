@@ -83,7 +83,34 @@ After the containers are up, visit [http://localhost:5173](http://localhost:5173
 | **MongoDB**         | 27017         | Main database (`CraveYard_DB`) |
 | **RabbitMQ**        | 5672, 15672   | Message broker (Management UI on 15672) |
 
-- **Container Communication:** The services communicate internally using Docker networking, and utilize RabbitMQ for asynchronous event-driven tasks (like `rider_queue`, `payment_event`, etc.).
+---
+
+## 🛠️ Technology Stack & Key Libraries
+
+- **Backend Framework:** [Express.js](https://expressjs.com/) (v5.x) is used across all microservices for routing and handling HTTP requests.
+- **Database ORM:** [Mongoose](https://mongoosejs.com/) is used to model and interact with the MongoDB database.
+- **Real-time WebSockets:** [Socket.io](https://socket.io/) is implemented in the `realtime` service to push live order updates and tracking data to clients.
+- **Payment Processing:** [Stripe](https://stripe.com/) is integrated within the `utils` service to handle secure payment transactions.
+
+---
+
+## 📨 Event-Driven Communication (Message Queues)
+
+CraveYard heavily relies on asynchronous message passing using RabbitMQ. The following queues ensure decoupled and reliable communication between services:
+
+1. **`PAYMENT_QUEUE`**: 
+   - **Producer:** `utils` service (when a payment is successfully processed via Stripe).
+   - **Consumer:** `restaurant` service (to update the order status and notify the restaurant kitchen).
+   - *This ensures that the kitchen only starts preparing food once the payment is confirmed.*
+
+2. **`ORDER_READY_QUEUE`**:
+   - **Producer:** `restaurant` service (triggered when the restaurant marks the food as ready).
+   - **Consumer:** `rider` service (to immediately find and assign an available nearby rider).
+
+3. **`RIDER_QUEUE`**:
+   - **Usage:** Managed by both `restaurant` and `rider` services to handle rider location updates, assignments, and availability statuses asynchronously.
+
+- **Container Communication:** The services communicate internally using Docker networking, and utilize RabbitMQ for these asynchronous event-driven tasks.
 - **RabbitMQ Management UI:** Accessible at `http://localhost:15672` (Username: `admin`, Password: `admin123`).
 
 ---
