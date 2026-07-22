@@ -37,6 +37,7 @@ export const verifyRestaurant = TryCatch(async (req, res) => {
   }
   //this ensure that recieved id is valid
   if (!ObjectId.isValid(id)) {//package from mongodb or bson
+    
     return res.status(400).json({
       message: "Invalid object id",
     });
