@@ -35,6 +35,6 @@ app.use("/api/payment", paymentRoutes);
 
 const PORT = process.env.PORT || 5003;
 
-app.listen(PORT, () => {
+app.listen(PORT as number, "0.0.0.0", () => {
   console.log(`Utils service is running on port ${PORT}`);
 });

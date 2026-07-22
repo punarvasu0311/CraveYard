@@ -16,7 +16,7 @@ app.use("/api/auth", authRoute);
 const PORT = process.env.PORT || 5001;
 
 
-app.listen(PORT, () => {
+app.listen(PORT as number, "0.0.0.0", () => {
   console.log(`Auth service is running on port ${PORT}`);
   connectDB();
 });

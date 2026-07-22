@@ -1,71 +1,107 @@
 # 🪦🍔 CraveYard – Microservices Based Food Delivery System
 
-CraveYard is a full-stack microservices-based food ordering and delivery system. This project includes:
-
-- A unified **Frontend** to interact with the backend ecosystems.
-- Backend services, each handling a different domain:
-  - **auth** – User authentication & authorization
-  - **restaurant** – Restaurant, menu, and order readiness
-  - **rider** – Rider logic and delivery queues
-  - **realtime** – Live tracking functionality
-  - **utils** – Payment events, system-wide helpers
-  - **admin** – Platform administration
-- Infrastructure:
-  - **mongodb** – NoSQL Database for all microservices
-  - **rabbitmq** – Message Broker for async tasks
-
-All services are containerized with Docker and orchestrated using Docker Compose.
+CraveYard is a robust, full-stack, event-driven microservices food ordering and delivery system. Built for scalability, it handles everything from user authentication and restaurant menus to real-time rider tracking and secure payment processing.
 
 ---
 
-## 🗂️ Directory Structure
-Below is the directory structure for the project:
+## ✨ Key Features (Microservices)
+
+- **🔐 Auth Service**: Handles secure, JWT-based login and role-based authorization for Users, Admins, Riders, and Restaurant owners.
+- **🏪 Restaurant Service**: Allows restaurants to manage their storefront, upload menu items, and process incoming food orders.
+- **🛵 Rider Service**: Manages automated rider assignment based on location and availability using asynchronous message queues.
+- **📍 Realtime Service**: Utilizes live WebSockets (Socket.io) to allow users to track their order status and rider location in real time.
+- **🛠️ Utils Service (Payments & Media)**: Integrates Stripe and Razorpay for a seamless multi-gateway checkout experience, and handles uploading images (menus, logos) to Cloudinary.
+- **📊 Admin Service**: Provides a centralized administrative dashboard for platform oversight and metrics.
+
+---
+
+## 🛠️ Technology Stack & 3rd Party Integrations
+
+### Core Services
+- **Backend Framework:** [Express.js](https://expressjs.com/) (v5.x) – Powers all microservices.
+- **Database ORM:** [Mongoose](https://mongoosejs.com/) – Models and interacts with the MongoDB database.
+- **Message Broker:** [RabbitMQ](https://www.rabbitmq.com/) – Facilitates asynchronous event-driven architecture between services.
+- **Containerization:** [Docker & Docker Compose](https://www.docker.com/) – For consistent local development and orchestration.
+
+### 3rd Party APIs & Libraries
+- **[Stripe](https://stripe.com/) & [Razorpay](https://razorpay.com/)**: Used in the `utils` service for handling secure payment transactions globally and in India.
+- **[Cloudinary](https://cloudinary.com/)**: Used for high-performance image upload, storage, and optimization.
+- **[Socket.io](https://socket.io/)**: Implemented in the `realtime` service to push live order updates and tracking data to clients instantly.
+
+---
+
+## 🗂️ Project Structure
+
+CraveYard is divided into several focused domains:
 
 ```
 CraveYard/
 ├── docker-compose.yml           # Docker Compose orchestration file
 ├── README.md                    # This file
 ├── backend/                     # Backend microservices
-│   ├── admin/
-│   ├── auth/
-│   ├── realtime/
-│   ├── restaurant/
-│   ├── rider/
-│   └── utils/
-└── frontend/                    # Frontend user interface
+│   ├── admin/                   # Platform administration
+│   ├── auth/                    # User authentication & authorization
+│   ├── realtime/                # Live tracking functionality (WebSockets)
+│   ├── restaurant/              # Restaurant and menu management
+│   ├── rider/                   # Rider logic and delivery queues
+│   └── utils/                   # Payment events, Cloudinary, system helpers
+└── frontend/                    # Frontend unified user interface
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started (For Beginners)
+
+Even with zero prior knowledge, you can get CraveYard running locally by following these steps.
 
 ### 1️⃣ Clone the Repository
 
-Clone the repository and change to the project directory:
+Open your terminal and clone the repository:
 
 ```bash
 git clone <your-repository-url>
 cd CraveYard
 ```
 
-### 2️⃣ Configure Environment Variables
+### 2️⃣ Configure Environment Variables (`.env`)
 
-Ensure you have a `.env` file at the root of the project (or appropriately inside the directories) as defined by the services. A `.env.example` file is provided in the backend directories (e.g., `backend/utils/.env.example`) to guide you.
+For security reasons, secret keys (like payment API keys and database passwords) are never pushed to GitHub. Instead, they are stored in a `.env` file on your local machine.
+
+1. Navigate to the backend services (e.g., `backend/utils`).
+2. You will see a file named `.env.example`. This is a template.
+3. Duplicate this file and rename the copy to strictly `.env`.
+4. Open the new `.env` file and fill in the dummy values with your actual keys. 
+
+**Example of `.env` configuration:**
+```env
+PORT=5003
+CLOUD_NAME=your_cloudinary_name_here
+CLOUD_API_KEY=your_cloudinary_api_key_here
+CLOUD_SECRET_KEY=your_cloudinary_secret_key_here
+RAZORPAY_KEY_ID=your_razorpay_key_here
+RAZORPAY_KEY_SECRET=your_razorpay_secret_here
+STRIPE_SECRET_KEY=your_stripe_secret_here
+RESTAURANT_SERVICE=http://localhost:5002
+RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672
+PAYMENT_QUEUE=payment_event
+FRONTEND_URL=http://localhost:5173
+```
+*(Note: You will need to create free accounts on Cloudinary, Stripe, and Razorpay to get your developer keys).*
 
 ### 3️⃣ Build & Start All Containers
 
-Use Docker Compose to build and run all services. From the project root, run:
+Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running. From the root `CraveYard` folder, run:
 
 ```bash
 docker-compose up -d
 ```
 
 This command will:
-- Pull/Build the Docker images for each microservice.
-- Create a shared Docker network for inter-container communication.
+- Pull and build the Docker images for every microservice.
+- Setup a shared Docker network so services can talk to each other.
 - Start all the services mapped to their respective ports.
 
-After the containers are up, visit [http://localhost:5173](http://localhost:5173) to access the frontend application.
+Once it finishes, visit **[http://localhost:5173](http://localhost:5173)** to access the frontend application!
 
 ---
 
@@ -83,69 +119,39 @@ After the containers are up, visit [http://localhost:5173](http://localhost:5173
 | **MongoDB**         | 27017         | Main database (`CraveYard_DB`) |
 | **RabbitMQ**        | 5672, 15672   | Message broker (Management UI on 15672) |
 
----
-
-## 🛠️ Technology Stack & Key Libraries
-
-- **Backend Framework:** [Express.js](https://expressjs.com/) (v5.x) is used across all microservices for routing and handling HTTP requests.
-- **Database ORM:** [Mongoose](https://mongoosejs.com/) is used to model and interact with the MongoDB database.
-- **Real-time WebSockets:** [Socket.io](https://socket.io/) is implemented in the `realtime` service to push live order updates and tracking data to clients.
-- **Payment Processing:** [Stripe](https://stripe.com/) is integrated within the `utils` service to handle secure payment transactions.
+- **RabbitMQ Management UI:** Accessible at `http://localhost:15672` (Username: `admin`, Password: `admin123`).
 
 ---
 
 ## 📨 Event-Driven Communication (Message Queues)
 
-CraveYard heavily relies on asynchronous message passing using RabbitMQ. The following queues ensure decoupled and reliable communication between services:
+CraveYard heavily relies on asynchronous message passing using RabbitMQ to ensure decoupled and reliable communication between services:
 
 1. **`PAYMENT_QUEUE`**: 
-   - **Producer:** `utils` service (when a payment is successfully processed via Stripe).
-   - **Consumer:** `restaurant` service (to update the order status and notify the restaurant kitchen).
-   - *This ensures that the kitchen only starts preparing food once the payment is confirmed.*
+   - **Producer:** `utils` service (when a payment is successfully processed via Stripe/Razorpay).
+   - **Consumer:** `restaurant` service.
+   - *Ensures the kitchen only starts preparing food once the payment is confirmed.*
 
 2. **`ORDER_READY_QUEUE`**:
-   - **Producer:** `restaurant` service (triggered when the restaurant marks the food as ready).
-   - **Consumer:** `rider` service (to immediately find and assign an available nearby rider).
+   - **Producer:** `restaurant` service (triggered when food is ready).
+   - **Consumer:** `rider` service (to dispatch an available nearby rider).
 
 3. **`RIDER_QUEUE`**:
-   - **Usage:** Managed by both `restaurant` and `rider` services to handle rider location updates, assignments, and availability statuses asynchronously.
-
-- **Container Communication:** The services communicate internally using Docker networking, and utilize RabbitMQ for these asynchronous event-driven tasks.
-- **RabbitMQ Management UI:** Accessible at `http://localhost:15672` (Username: `admin`, Password: `admin123`).
+   - Managed by both `restaurant` and `rider` services to handle rider location updates and availability statuses asynchronously.
 
 ---
 
 ## 🚧 Managing the Cluster
 
-### Stopping the Cluster
-
-To stop all containers and remove the network:
-
+To stop all containers and remove the network gracefully:
 ```bash
 docker-compose down
 ```
 
-To also remove volumes (such as `mongodb_data` to reset your database):
-
+To entirely reset your database and wipe volumes (use with caution):
 ```bash
 docker-compose down -v
 ```
-
----
-
-## 🛠️ Troubleshooting
-
-- **Check Container Logs**:
-  If a specific service isn't working as expected, inspect its logs:
-  ```bash
-  docker logs craveyard-restaurant -f
-  ```
-
-- **RabbitMQ Connection Issues (ECONNREFUSED)**:  
-  Ensure that `rabbitmq` has fully initialized before other services try to connect. Log in to the RabbitMQ Management UI to verify queues are created and messages are flowing.
-
-- **Port Conflicts**:  
-  Ensure ports `5001-5006`, `5173`, `27017`, and `15672` are available on your host machine before running `docker-compose up`.
 
 ---
 

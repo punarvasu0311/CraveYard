@@ -19,7 +19,7 @@ app.use(cors());
 
 app.use("/api/rider", riderRoutes);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT as any, "0.0.0.0", () => {
   console.log(`Rider service is running on port ${process.env.PORT}`);
   connectDB();
 });
