@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: craveyard-rabbitmq
+    ports:
+      - "5672:5672"   # Message broker port
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+
+  auth:
+    image: punarvasu1154/craveyard-auth:latest
+    container_name: craveyard-auth
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./backend/auth/.env
+
+  restaurant:
+    image: punarvasu1154/craveyard-restaurant:latest
+    container_name: craveyard-restaurant
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./backend/restaurant/.env
+    environment:
+      # Override the localhost RabbitMQ URL to point to the rabbitmq container
+      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+  utils:
+    image: punarvasu1154/craveyard:latest
+    container_name: craveyard-utils
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./backend/utils/.env
+    environment:
+      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+  rider:
+    image: punarvasu1154/craveyard-rider:latest
+    container_name: craveyard-rider
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./backend/rider/.env
+    environment:
+      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+  realtime:
+    image: punarvasu1154/craveyard-realtime:latest
+    container_name: craveyard-realtime
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./backend/realtime/.env
+
+  admin:
+    image: punarvasu1154/craveyard-admin:latest
+    container_name: craveyard-admin
+    ports:
+      - "5006:5006"
+    env_file:
+      - ./backend/admin/.env
+
+  frontend:
+    image: punarvasu1154/craveyard-frontend:latest
+    container_name: craveyard-frontend
+    ports:
+      - "5173:80"  # Nginx runs on 80, mapped to your usual 5173
