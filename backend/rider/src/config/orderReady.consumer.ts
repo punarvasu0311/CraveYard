@@ -64,8 +64,8 @@ export const startOrderReadyConsumer = async () => {
             }
           );
           console.log(`Notified rider ${rider.userId} successfully`);
-        } catch (error) {
-          console.log(`Failed to notify rider ${rider.userId}`);
+        } catch (error: any) {
+          console.log(`Failed to notify rider ${rider.userId}:`, error.message);
         }
       }
       //this tells the rabbitmq that msg is successfully processed,so now rabbitmq can delete it

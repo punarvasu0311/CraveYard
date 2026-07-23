@@ -42,25 +42,30 @@ export const startPaymentConsumer = async () => {
 
       console.log("✅Order Placed:", order._id);
 
-      //   socket work
-
-      await axios.post(
-        `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
-        {
-          event: "order:new",
-          room: `restaurant:${order.restaurantId}`,
-          payload: {
-            orderId: order._id,
-          },
-        },
-        {
-          headers: {
-            "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
-          },
-        }
-      );
-      //this tells the rabbitmq that msg is successfully processed,so now rabbitmq can delete it
+      //this tells the rabbitmq that msg is successfully processed, so now rabbitmq can delete it
+      // Ack here so we don't re-process payment if socket emit fails
       channel.ack(msg);
+
+      //   socket work
+      try {
+        await axios.post(
+          `${process.env.REALTIME_SERVICE}/api/v1/internal/emit`,
+          {
+            event: "order:new",
+            room: `restaurant:${order.restaurantId}`,
+            payload: {
+              orderId: order._id,
+            },
+          },
+          {
+            headers: {
+              "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
+            },
+          }
+        );
+      } catch (socketError: any) {
+        console.error("Socket emit failed in payment consumer:", socketError.message);
+      }
     } catch (error) {
       console.error("❌ Payment cosumer error:", error);
     }
