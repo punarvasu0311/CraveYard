@@ -7,12 +7,12 @@ import { AppProvider } from "./context/AppContext.tsx";
 import "leaflet/dist/leaflet.css";
 import { SocketProvider } from './context/SocketContext.tsx';
 
-export const authService = "https://craveyard-authv12.onrender.com";
-export const restaurantService = "https://craveyard-restaurantv12.onrender.com";
-export const utilsService = "https://craveyard-utilsv12.onrender.com";
-export const riderService = "https://craveyard-riderv12.onrender.com";
-export const realtimeService = "https://craveyard-realtimev12.onrender.com";
-export const adminService = "https://craveyard-adminv12.onrender.com";
+export const authService = "https://craveyard-authv13.onrender.com";
+export const restaurantService = "https://craveyard-restaurantv13.onrender.com";
+export const utilsService = "https://craveyard-utilsv13.onrender.com";
+export const riderService = "https://craveyard-riderv13.onrender.com";
+export const realtimeService = "https://craveyard-realtimev13.onrender.com";
+export const adminService = "https://craveyard-adminv13.onrender.com";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
